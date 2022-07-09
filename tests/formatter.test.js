@@ -1,1 +1,1 @@
-const { format_date } = require('../utils/formatter');
+const { format_date } = require('../utils/date_formatter');
