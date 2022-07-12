@@ -19,8 +19,10 @@ If your README is long, add a table of contents to make it easy for users to fin
 
 > clone repository 
 >> npm i
->>> npm run start
->>>> Insomnia to test routes
+>>> mysql -u 'username' -p'password'
+>>> source ./db/
+>>>> npm run start
+>>>>> Insomnia to test routes
 >>>>> Postman to test routes
 
 ## Usage
@@ -57,7 +59,7 @@ Features
 
 MIT License
 
-Copyright (c) [year] [fullname]
+Copyright (c) [2022] [Trent Dickson]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
