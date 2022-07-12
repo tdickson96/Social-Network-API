@@ -1,126 +1,74 @@
-// ObjectId() method for converting studentId string into an ObjectId for querying database
-const { ObjectId } = require('mongoose').Types;
-const { Student, Course } = require('../models');
+const { User, Thought } = require('../models')
+const user404Message = (id) => `User ID: ${id} not found!`
+const user204Message = (id) => `User ID: ${id} deleted!`
 
-// TODO: Create an aggregate function to get the number of students overall
-const headCount = async () =>
-  Student.aggregate()
-    // Your code here
-    .then((numberOfStudents) => numberOfStudents);
-
-// Execute the aggregate method on the Student model and calculate the overall grade by using the $avg operator
-const grade = async (studentId) =>
-  Student.aggregate([
-    // TODO: Ensure we include only the student who can match the given ObjectId using the $match operator
-    {
-      // Your code here
+const userController = {
+    // Get all users 
+    getAllUsers(req, res) {
+        User.find({})
+          .populate({ path: 'thoughts', select: '-__v'})
+          .populate({ path: 'friends', select: '-__v'})
+          .select('-__v')
+          // dbThoughtData
+          .then(dbUserData => res.json(dbUserData))
+          .catch(err => res.status(500).json(err))
     },
-    {
-      $unwind: '$assignments',
-    },
-    // TODO: Group information for the student with the given ObjectId alongside an overall grade calculated using the $avg operator
-    {
-      // Your code here
-    },
-  ]);
 
-module.exports = {
-  // Get all students
-  getStudents(req, res) {
-    Student.find()
-      .then(async (students) => {
-        const studentObj = {
-          students,
-          headCount: await headCount(),
-        };
-        return res.json(studentObj);
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json(err);
-      });
-  },
-  // Get a single student
-  getSingleStudent(req, res) {
-    Student.findOne({ _id: req.params.studentId })
-      .select('-__v')
-      .lean()
-      .then(async (student) =>
-        !student
-          ? res.status(404).json({ message: 'No student with that ID' })
-          : res.json({
-              student,
-              grade: await grade(req.params.studentId),
-            })
-      )
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json(err);
-      });
-  },
-  // create a new student
-  createStudent(req, res) {
-    Student.create(req.body)
-      .then((student) => res.json(student))
-      .catch((err) => res.status(500).json(err));
-  },
-  // Delete a student and remove them from the course
-  deleteStudent(req, res) {
-    Student.findOneAndRemove({ _id: req.params.studentId })
-      .then((student) =>
-        !student
-          ? res.status(404).json({ message: 'No such student exists' })
-          : Course.findOneAndUpdate(
-              { students: req.params.studentId },
-              { $pull: { students: req.params.studentId } },
-              { new: true }
-            )
-      )
-      .then((course) =>
-        !course
-          ? res.status(404).json({
-              message: 'Student deleted, but no courses found',
-            })
-          : res.json({ message: 'Student successfully deleted' })
-      )
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json(err);
-      });
-  },
+    // Get a single user 
+    getOneUser({ params }, res) {
+        User.findOne({ _id: params.id })
+          .populate({ path: 'friends', select: '-__v' })
+          .populate({ path: 'thoughts', select: '-__v', populate: { path: 'reactions'}})
+          .select('-__v')
+          .then(dbUserData =>  dbUserData 
+            ? res.json(dbUserData) 
+            : res.status(404).json({ message: user404Message(params.id) }))
+          .catch(err => res.status(404).json(err))
+    },
 
-  // Add an assignment to a student
-  addAssignment(req, res) {
-    console.log('You are adding an assignment');
-    console.log(req.body);
-    Student.findOneAndUpdate(
-      { _id: req.params.studentId },
-      { $addToSet: { assignments: req.body } },
-      { runValidators: true, new: true }
-    )
-      .then((student) =>
-        !student
-          ? res
-              .status(404)
-              .json({ message: 'No student found with that ID :(' })
-          : res.json(student)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-  // Remove assignment from a student
-  removeAssignment(req, res) {
-    Student.findOneAndUpdate(
-      { _id: req.params.studentId },
-      { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
-      { runValidators: true, new: true }
-    )
-      .then((student) =>
-        !student
-          ? res
-              .status(404)
-              .json({ message: 'No student found with that ID :(' })
-          : res.json(student)
-      )
-      .catch((err) => res.status(500).json(err));
-  },
-};
+    // Create user 
+    createUser({ body }, res) {
+        User.create({ username: body.username, email: body.email})
+        .then(dbUserData => res.json(dbUserData))
+        .catch(err => res.status(400).json(err))
+    },
+
+    // Update user 
+    updateUser({ params, body }, res) {
+        User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+        .then(dbUserData =>  dbUserData 
+          ? res.json(dbUserData) 
+          : res.status(404).json({ message: user404Message(params.id) }))
+        .catch(err => res.status(400).json(err))
+    },
+
+    // Delete user 
+    deleteUser({ params }, res) {
+        User.findOneAndDelete({ _id: params.id })
+          .then(dbUserData => {
+              if (!dbUserData) {
+                  return res.status(404).json({ message: user404Message(params.id) })
+              }
+              Thought.deleteMany({ username: dbUserData.username}).then(deletedData => deletedData 
+                ? res.json({ message: user204Message(params.id)}) 
+                : res.status(404).json({ message: user404Message(params.id) }))
+          })
+        .catch(err => res.status(400).json(err))
+    },
+
+    // Add friend
+    addFriend({ params }, res) {
+        User.findOneAndUpdate({ _id: params.userId}, { $push: { friends: params.friendId } }, { new: true, runValidators: true })
+          .then(dbUserData => res.json(dbUserData))
+          .catch(err => res.status(400).json(err))
+    },
+
+    // Remove friend 
+    removeFriend({ params }, res) {
+        User.findOneAndUpdate({ _id: params.userId}, { $pull: { friends: params.friendId} })
+          .then(dbUserData => res.status(200).json(user204Message(params.friendId, 'User')))
+          .catch(err => res.json(err))
+    }
+}
+
+module.exports = userController
