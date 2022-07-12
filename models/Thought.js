@@ -1,38 +1,71 @@
 const { Schema, model } = require('mongoose');
+const { format_date } = require('../utils/formatter');
 
-const courseSchema = new Schema(
+// Posts by Users
+const ThoughtSchema = new Schema(
   {
-    courseName: {
-      type: String,
-      required: true,
-    },
-    inPerson: {
-      type: Boolean,
-      default: true,
-    },
-    startDate: {
-      type: Date,
-      default: Date.now(),
-    },
-    endDate: {
-      type: Date,
-      default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
-    },
-    students: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Student',
+      thoughtText: {
+          type: String,
+          required: true,
+          minlength: 1,
+          maxLength: 280
       },
-    ],
+      createdAt: {
+          type: Date,
+          default: Date.now,
+          get: (time) => format_date(time) 
+      },
+      username: {
+          type: String,
+          required: true
+      },
+      reactions: [reactionSchema]
   },
   {
-    toJSON: {
-      virtuals: true,
-    },
-    id: false,
+      toJSON: {
+          virtuals: true,
+          getters: true 
+      },
+      id: false
   }
-);
+)
 
-const Course = model('course', courseSchema);
+// Reactions on Posts by Users
+const reactionSchema = new Schema(
+  {
+      reactionId: {
+          type: Schema.Types.ObjectId,
+          default: () => new Types.ObjectId()
+      },
+      reactionBody: {
+          type: String,
+          required: true,
+          maxLength: 280
+      },
+      username: {
+          type: String,
+          required: true
+      },
+      createdAt: {
+          type: Date,
+          default: Date.now,
+          get: (time) => format_date(time)
+      }
+  },
+  {
+      toJSON: {
+          getters: true
+      },
+      id: false
+  }
+)
 
-module.exports = Course;
+// a virtual is a property that is not stored in MongoDB
+// `reactionCount` is now a property on Thought
+ThoughtSchema.virtual('reactionCount').get(function() {
+  return this.reactions.length;
+});
+
+const Thought = model('Thought', ThoughtSchema)
+
+module.exports = Thought
