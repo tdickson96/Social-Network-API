@@ -7,22 +7,22 @@ const {
   deleteThought,
   createReaction,
   removeReaction
-} = require('../../controllers/thought-controller')
+} = require('../../controllers/thoughtController')
 // api -> routes -> base -> thoughts -> file
 
 thoughts.route('/')
-      .get(getAllThoughts)
-      .post(createThought);
+.get(getAllThoughts)
+.post(createThought);
 
 thoughts.route('/:id')
-      .get(getOneThought)
-      .put(updateThought)
-      .delete(deleteThought);
+.get(getOneThought)
+.put(updateThought)
+.delete(deleteThought);
 
 thoughts.route('/:thoughtId/reactions')
-      .post(createReaction);
+.post(createReaction);
 
 thoughts.route('/:thoughtId/reactions/:reactionId')
-      .delete(removeReaction);
+.delete(removeReaction);
 
 module.exports = thoughts;

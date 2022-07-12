@@ -5,7 +5,7 @@
   "main": "server.js",
   "license": "[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)",
   "scripts": {
-    "start": "node index",
+    "start": "node routes/index",
     "dev": "nodemon index",
     "seed": "node utils/seed",
     "heroku-postbuild": "node utils/seed.js",
