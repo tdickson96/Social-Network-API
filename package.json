@@ -1,19 +1,19 @@
 {
   "name": "social-network-api",
   "version": "1.0.1",
-  "description": "Mongoose back-end project - Develop",
+  "description": "NoSQL, MongoDB, Mongoose back-end API for social network app where users share their thoughts, reactions, and friendships",
   "main": "server.js",
-  "license": "[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)",
+  "author": "Trent Dickson",
+  "license": "MIT",
   "scripts": {
-    "start": "node routes/index",
-    "dev": "nodemon index",
-    "seed": "node utils/seed",
-    "heroku-postbuild": "node utils/seed.js",
-    "test": "jest --watch"
+    "start": "node server.js",
+    "dev": "nodemon start",
+    "seed": "node utils/seed"
   },
   "dependencies": {
+    "api-routes": "^0.2.1",
     "express": "^4.18.1",
-    "jest": "^28.1.2",
+    "moment": "^2.29.4",
     "mongoose": "^6.4.4"
   },
   "devDependencies": {
