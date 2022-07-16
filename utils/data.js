@@ -93,7 +93,7 @@ const getRandomArrItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const getRandomFriends = (friends, user) => {
     let results = new Set();
     for (let i = 0; i < friends; i++) {
-        const retrievedFriend = getRandomArrItem(usernamesArr);
+        const retrievedFriend = getRandomArrItem(usersArr);
         if (!(retrievedFriend === user)) results.add(retrievedFriend);
     }
     results = Array.from(results);
@@ -105,7 +105,7 @@ const getRandomReactions = (numReactions) => {
     for (let i = 0; i < numReactions; i++) {
         results.push({
             reactionBody: getRandomArrItem(reactionsArr),
-            username: getRandomArrItem(usernamesArr)
+            username: getRandomArrItem(usersArr)
         });
     }
     return results;
@@ -124,8 +124,9 @@ const getRandomThoughts = (numThoughts, numReactions, user) => {
 };
 
 module.exports = {
-    usernamesArr,
+    usersArr,
     emailsArr,
     getRandomFriends,
-    getRandomThoughts
+    getRandomThoughts,
+    getRandomArrItem 
 }
