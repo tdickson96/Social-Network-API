@@ -27,11 +27,9 @@ If your README is long, add a table of contents to make it easy for users to fin
 
 ## Usage
 
-To add a screenshot, create an `assets/images` folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
+[Repository](https://github.com/tdickson96/Social-Network-API)
 
-    ```md
-    ![alt text](assets/images/screenshot.png)
-    ```
+[Walkthrough](https://drive.google.com/file/d/1TA1hUhjCJ5Mo071cHMi7tC-JFIrGEKvZ/view?usp=sharing) 
 
 ## Credits
 

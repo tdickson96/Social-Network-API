@@ -58,5 +58,7 @@ connection.once('open', async () => {
       await User.collection.insertMany(users);
     //   console.log(users);
       console.log('--- USERS SEEDED ---');
+
+      return;
 });
 

@@ -46,6 +46,11 @@ userSchema.virtual('friendCount').get(function() {
   return this.friends.length
 });
 
+userSchema.pre('findOneAndDelete', { document: false, query: true }, async function() {
+  const doc = await this.model.findOne(this.getFilter());
+  await Thought.deleteMany({ username: doc.username });
+}); 
+
 const User = model('User', userSchema);
 
 module.exports = User;
