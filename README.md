@@ -23,7 +23,6 @@ If your README is long, add a table of contents to make it easy for users to fin
 >>> source ./db/
 >>>> npm run start
 >>>>> Insomnia to test routes
->>>>> Postman to test routes
 
 ## Usage
 
@@ -31,27 +30,24 @@ If your README is long, add a table of contents to make it easy for users to fin
 
 [Walkthrough](https://drive.google.com/file/d/1TA1hUhjCJ5Mo071cHMi7tC-JFIrGEKvZ/view?usp=sharing) 
 
+![demo](./assets/images/demo0.png)
+![demo](./assets/images/demo1.png)
+![demo](./assets/images/demo2.png)
+![demo](./assets/images/demo3.png)
+![demo](./assets/images/demo4.png)
+![demo](./assets/images/demo5.png)
+![demo](./assets/images/demo6.png)
+![demo](./assets/images/demo7.png)
+![demo](./assets/images/demo8.png)
+![demo](./assets/images/demo9.png)
+![demo](./assets/images/demo10.png)
+![demo](./assets/images/demo11.png)
+![demo](./assets/images/demo12.png)
+
 ## Credits
 
 [Trent Dickson - GitHub](https://github.com/tdickson96)
 [LinkedIn](https://www.linkedin.com/in/tad96/)
-
-## Features
-
-Features
->   a
-
->   b
-
->   c
-
->   d
-
->   e
-
-## Tests
-
-> npm test
 
 ## License
 
